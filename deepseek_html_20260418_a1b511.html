@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Спокойной ночи, любимая ❤️🌙</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #8ba4b0 0%, #5c7a8a 100%);
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Quicksand', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            padding: 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Контейнер для анимационных частиц (сердечки, луны) */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            font-size: 1.8rem;
+            pointer-events: none;
+            animation: floatUpFade 1.8s ease-out forwards;
+            z-index: 1001;
+        }
+
+        @keyframes floatUpFade {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(0.6) rotate(0deg);
+            }
+            50% {
+                opacity: 0.9;
+                transform: translateY(-60px) scale(1.1) rotate(15deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-150px) scale(0.8) rotate(25deg);
+            }
+        }
+
+        /* Карточка */
+        .card {
+            background: rgba(55, 71, 79, 0.35);
+            backdrop-filter: blur(12px);
+            border-radius: 64px;
+            padding: 20px;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 460px;
+        }
+
+        /* Сцена: кот и оверлей */
+        .cat-stage {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Фото кота */
+        .cat-photo {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-width: 400px;
+            border-radius: 56px;
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.5s ease;
+            object-fit: cover;
+            aspect-ratio: 1 / 1;
+            background-color: #b9cfda;
+        }
+
+        .cat-photo.hide-photo {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0s 0.4s;
+        }
+
+        /* Оверлей с вашим фото-сердечком и текстом */
+        .love-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(44, 62, 70, 0.75);
+            backdrop-filter: blur(16px);
+            border-radius: 56px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0s 0.5s;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2), 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .love-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0s 0s;
+        }
+
+        /* Фото-сердечко (ваша совместная фотография в форме сердца) */
+        .heart-photo {
+            width: 75%;
+            max-width: 210px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            border: 3px solid #ffb7c5;
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            clip-path: path("M12 4.419c-2.826-5.695-11-2.979-11 3.618 0 4.249 5 9 11 14 6-5 11-9.751 11-14 0-6.597-8.174-9.313-11-3.618z");
+            /* классическая форма сердца, но для фото лучше мягкая форма */
+        }
+        
+        /* Более щадящая форма сердца через маску (кроссбраузерно) */
+        .heart-frame {
+            width: 180px;
+            height: 180px;
+            background: #ffe0e7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            position: relative;
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
+        }
+        
+        .heart-frame img {
+            width: 92%;
+            height: 92%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #fff0f3;
+        }
+        
+        /* Романтичный текст */
+        .message-group {
+            text-align: center;
+            width: 100%;
+        }
+        
+        .main-message {
+            font-family: 'Segoe UI', 'Quicksand', system-ui;
+            font-weight: 700;
+            font-size: 1.7rem;
+            color: #fff5f0;
+            text-shadow: 0 2px 6px #2c3e44;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #ffe6f0, #ffd9e2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: #fff0f3;
+            text-shadow: 0 1px 3px #1e2f36;
+        }
+        
+        .secondary-message {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-top: 12px;
+            color: #ffecb3;
+            text-shadow: 0 1px 2px #1f3b44;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .secondary-message span {
+            background: rgba(255, 215, 200, 0.2);
+            padding: 5px 12px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Подсказка */
+        .nose-hint {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.85rem;
+            color: #e3f2f5;
+            background: rgba(38, 50, 56, 0.7);
+            backdrop-filter: blur(5px);
+            display: inline-block;
+            width: auto;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 500;
+        }
+        
+        .nose-hint span {
+            display: inline-block;
+            animation: softPulse 1.6s infinite;
+        }
+        
+        @keyframes softPulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 5px #ffcfb0; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        
+        @media (max-width: 550px) {
+            .card { padding: 16px; }
+            .main-message { font-size: 1.4rem; }
+            .secondary-message { font-size: 1.1rem; }
+            .heart-frame { width: 140px; height: 140px; }
+        }
+        
+        /* исчезающие частицы не мешают */
+        .nose-hint, .cat-stage {
+            position: relative;
+        }
+        
+        button.reset-btn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="particles-container" id="particlesContainer"></div>
+
+<div class="card">
+    <div class="cat-stage" id="catStage">
+        <!-- ФОТО ВАШЕГО КОТА (замените src) -->
+        <img id="catImage" class="cat-photo" src="https://sun9-34.userapi.com/s/v1/ig2/z2nT_lv60Lu2PLDxwSoSlLkd_j1vguu3vjQ-WxDZcVHPSM3mrI4gM2E3WuHN6S09hRv3vgyU3TccBx1Uh68bTael.jpg?quality=95&as=32x32,48x48,72x72,108x109,160x161,167x168&from=bu&u=ySZYRTDFXvEKE3Azn3e_HcPwzlEpwzDGIfjYviI4krc&cs=167x0" alt="твой любимый котик">
+        
+        <!-- ОВЕРЛЕЙ: ВАША ФОТОГРАФИЯ-СЕРДЕЧКО и тексты "спокойной ночи любимая" + "люблю тебя" -->
+        <div id="loveOverlay" class="love-overlay">
+            <div class="heart-frame">
+                <!-- сюда вставьте ваше совместное фото (сердечко) -->
+                <img id="couplePhoto" src="https://sun9-71.userapi.com/s/v1/ig2/7puRb78BXuA612JY9zW4hd0JN9Am5LSlbX6z4UrYpgYRt9x9NKU_X81QhCHXtHStmpdD39ik7n1OMPSDdT-esRbl.jpg?quality=95&as=32x30,48x45,72x68,108x102,160x151,240x226,360x340,480x453,493x465&from=bu&u=CKBRJxIXiJmadv0_nVKLUBCiWn5-L6uj8-sRgZ33wjY&cs=493x0" alt="наше сердце">
+            </div>
+            <div class="message-group">
+                <div class="main-message">🌙 спокойной ночи, любимая ❤️</div>
+                <div class="secondary-message">
+                    <span>✨ люблю тебя ✨</span>
+                    <span>💫 бесконечно 💫</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center;">
+        <div class="nose-hint">
+            <span>🐾 нажми на носик котика 🐾</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========= НАСТРОЙКИ ДЛЯ ВАШЕГО ФОТО КОТА (положение носика) =========
+        // Поменяйте эти значения, чтобы нажатие точно попадало в нос вашего кота.
+        const NOSE_X_PERCENT = 0.40;      // 0.5 = 50% ширины
+        const NOSE_Y_PERCENT = 0.55;      // 65% высоты (обычно район носа)
+        const HIT_RADIUS_PX = 67;          // радиус попадания пальцем (увеличен для удобства)
+        
+        // ----- КОНЕЦ НАСТРОЕК -----
+        
+        const catImg = document.getElementById('catImage');
+        const loveOverlay = document.getElementById('loveOverlay');
+        const particlesContainer = document.getElementById('particlesContainer');
+        
+        // Состояние: активен ли режим "фото кота" или уже показана любовная открытка
+        let isLoveActive = false;
+        
+        // Функция определения области носика в координатах экрана
+        function getNoseHitRect() {
+            if (!catImg) return null;
+            const rect = catImg.getBoundingClientRect();
+            if (rect.width === 0) return null;
+            const noseX = rect.left + (rect.width * NOSE_X_PERCENT);
+            const noseY = rect.top + (rect.height * NOSE_Y_PERCENT);
+            return { cx: noseX, cy: noseY, radius: HIT_RADIUS_PX };
+        }
+        
+        // Проверка попадания в нос
+        function isHitOnNose(clientX, clientY) {
+            const noseArea = getNoseHitRect();
+            if (!noseArea) return false;
+            const dx = clientX - noseArea.cx;
+            const dy = clientY - noseArea.cy;
+            return Math.hypot(dx, dy) <= noseArea.radius;
+        }
+        
+        // Функция создания вылетающих сердечек и лун
+        function createFloatingParticles(clickX, clickY) {
+            const emojis = ['❤️', '💖', '💗', '🌙', '✨', '💫', '⭐', '🌕', '💓', '🌸', '🌟', '🌙✨'];
+            const count = 16; // количество частиц
+            
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                // случайный эмодзи
+                const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                particle.textContent = randomEmoji;
+                
+                // случайный размер
+                const size = 1.2 + Math.random() * 1.2;
+                particle.style.fontSize = `${size}rem`;
+                
+                // начальная позиция: около точки нажатия (носик) + небольшое случайное смещение
+                const startX = clickX + (Math.random() - 0.5) * 35;
+                const startY = clickY + (Math.random() - 0.5) * 30;
+                particle.style.left = `${startX}px`;
+                particle.style.top = `${startY}px`;
+                
+                // случайная задержка и траектория (добавим небольшой разброс по времени)
+                const duration = 1.2 + Math.random() * 1.2;
+                particle.style.animation = `floatUpFade ${duration}s ease-out forwards`;
+                particle.style.animationDelay = `${Math.random() * 0.2}s`;
+                
+                // добавим небольшой поворот
+                const rotate = (Math.random() - 0.5) * 40;
+                particle.style.transform = `rotate(${rotate}deg)`;
+                
+                particlesContainer.appendChild(particle);
+                
+                // удалить после анимации
+                setTimeout(() => {
+                    if (particle.parentNode) particle.parentNode.removeChild(particle);
+                }, duration * 1000 + 200);
+            }
+        }
+        
+        // Основной обработчик нажатия на кота
+        function onCatTap(e) {
+            e.preventDefault?.();
+            let clientX, clientY;
+            
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+                e.preventDefault();
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            
+            // Если уже показана открытка с любовью — повторное нажатие не меняет состояние,
+            // но можно не блокировать, чтобы не сбивать. По заданию всё должно появиться один раз.
+            if (isLoveActive) return;
+            
+            // Проверяем: нажали на носик?
+            if (isHitOnNose(clientX, clientY)) {
+                // 1) Вылетают сердечки и луны (эффект)
+                createFloatingParticles(clientX, clientY);
+                
+                // 2) Плавно исчезает фото кота, появляется оверлей с вашим фото-сердечком и текстами
+                isLoveActive = true;
+                catImg.classList.add('hide-photo');
+                loveOverlay.classList.add('show');
+                
+                // 3) Легкая вибрация для отклика
+                if (window.navigator && window.navigator.vibrate) {
+                    window.navigator.vibrate(40);
+                }
+                
+                // Дополнительно: через 2 секунды все частицы уже исчезнут сами,
+                // а новая фотка и надписи останутся и не мешают обзору.
+                console.log("✨ Носик нажат! Вылетели сердечки и луны, показана ваша фотография-сердечко с пожеланиями ✨");
+            } else {
+                // Легкий тактильный отклик, чтобы чувствовалось нажатие мимо носика (по желанию)
+                if (window.navigator && window.navigator.vibrate) {
+                    window.navigator.vibrate(15);
+                }
+            }
+        }
+        
+        // Добавляем слушатели на фото кота
+        if (catImg) {
+            catImg.addEventListener('click', onCatTap);
+            catImg.addEventListener('touchstart', onCatTap, { passive: false });
+            catImg.style.cursor = 'pointer';
+        }
+        
+        // ========= ВАЖНО: ЗАМЕНИТЕ ФОТОГРАФИИ НА СВОИ =========
+        // 1) Фото кота: поменяйте src у catImage
+        // 2) Ваше совместное фото в форме сердца: поменяйте src у #couplePhoto
+        // Пример ниже показывает как заменить. По умолчанию стоят демо-картинки.
+        
+        // Инструкция в консоли
+        console.log("💖 Готово! Замените ссылки на фото: \n - Котик: измените src у #catImage \n - Совместное фото: измените src у #couplePhoto \n Настройте NOSE_X_PERCENT / NOSE_Y_PERCENT если нужно сместить зону носа.");
+        
+        // Для удобства: если нужно вернуть начальное состояние (опционально, но не обязательно по заданию).
+        // Однако, если захотите переиграть — можно добавить скрытый жест: долгое нажатие на оверлей вернёт котика.
+        // Это дополнительная фича, не ломающая основной сценарий.
+        let pressTimer = null;
+        
+        function resetToCat() {
+            if (!isLoveActive) return;
+            isLoveActive = false;
+            catImg.classList.remove('hide-photo');
+            loveOverlay.classList.remove('show');
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(20);
+            }
+        }
+        
+        // Долгий тап на оверлее (3 сек) вернет кота, чтобы можно было снова нажать на носик и порадовать.
+        const overlayElem = document.getElementById('loveOverlay');
+        if (overlayElem) {
+            overlayElem.addEventListener('touchstart', (e) => {
+                pressTimer = setTimeout(() => {
+                    resetToCat();
+                    pressTimer = null;
+                }, 800);
+            });
+            overlayElem.addEventListener('touchend', () => {
+                if (pressTimer) clearTimeout(pressTimer);
+            });
+            overlayElem.addEventListener('touchcancel', () => {
+                if (pressTimer) clearTimeout(pressTimer);
+            });
+            // Для мыши (ПК)
+            overlayElem.addEventListener('mousedown', () => {
+                pressTimer = setTimeout(() => {
+                    resetToCat();
+                    pressTimer = null;
+                }, 800);
+            });
+            overlayElem.addEventListener('mouseup', () => {
+                if (pressTimer) clearTimeout(pressTimer);
+            });
+        }
+        
+        // Предотвращаем случайное выделение на мобильных
+        document.querySelectorAll('.cat-stage, .nose-hint').forEach(el => {
+            el.addEventListener('dragstart', (e) => e.preventDefault());
+        });
+        
+        // Также адаптируемся к изменениям окна (повороту) - перерисовка не требуется, т.к. координаты пересчитываются каждый раз.
+        // Если фото вашего кота не квадратное — CSS aspect-ratio сохранит гармонию.
+        // подсказка: для идеального попадания в нос можно увеличить HIT_RADIUS_PX до 65.
+        
+        // Установим начальное состояние (на всякий случай)
+        loveOverlay.classList.remove('show');
+        catImg.classList.remove('hide-photo');
+        isLoveActive = false;
+        
+        // Доп. стили: делаем частицы красивыми
+        const style = document.createElement('style');
+        style.textContent = `
+            .particle {
+                position: fixed;
+                will-change: transform, opacity;
+                filter: drop-shadow(0 0 3px rgba(0,0,0,0.2));
+                z-index: 10000;
+                pointer-events: none;
+            }
+            .heart-frame {
+                background: radial-gradient(circle at 30% 30%, #ffd9e2, #ffb7c5);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            }
+            .heart-frame img {
+                border-radius: 50%;
+                object-fit: cover;
+                transition: transform 0.3s;
+            }
+            .love-overlay .secondary-message span {
+                background: rgba(0,0,0,0.25);
+                font-weight: 500;
+                backdrop-filter: blur(6px);
+            }
+        `;
+        document.head.appendChild(style);
+    })();
+</script>
+</body>
+</html>
